@@ -1,0 +1,40 @@
+{
+  "name": "freshroots-demand-planner",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "migrate": "tsx scripts/migrate.ts",
+    "setup:supabase": "tsx scripts/setup-supabase.ts",
+    "zoho:connect": "tsx scripts/zoho-connect.ts",
+    "zoho:bootstrap": "tsx scripts/zoho-bootstrap.ts",
+    "seed": "tsx scripts/seed.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^16.4.5",
+    "pg": "^8.13.1",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.1.0",
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.12.7",
+    "zod": "^3.25.76"
+  }
+}

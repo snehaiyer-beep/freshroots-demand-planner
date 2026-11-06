@@ -1,0 +1,10 @@
+node_modules
+.next
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# secrets / local config (keep the example)
+.env
+.env.*
+!.env.example
