@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1440" viewBox="0 0 2400 1440" font-family="Segoe UI, Inter, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1a2b"/>
+      <stop offset="1" stop-color="#070b14"/>
+    </linearGradient>
+    <marker id="aBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b82f6"/></marker>
+    <marker id="aAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f59e0b"/></marker>
+    <marker id="aGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22c55e"/></marker>
+    <style>
+      .h { fill:#f1f5f9; font-size:30px; font-weight:700; }
+      .t { fill:#cbd5e1; font-size:22px; }
+      .s { fill:#94a3b8; font-size:19px; }
+      .cap { fill:#8b9bb4; font-size:19px; font-weight:700; letter-spacing:3px; }
+      .lb { font-size:19px; font-weight:600; }
+      .panel { fill:#0d1526; stroke:#1f2b40; stroke-width:2; }
+      .box { fill:#111b2f; stroke-width:2.5; }
+      .db { fill:#121c30; stroke:#24324a; stroke-width:2; }
+      .dbh { fill:#f1f5f9; font-size:25px; font-weight:700; }
+      .flow { fill:none; stroke-width:3.5; }
+    </style>
+  </defs>
+
+  <rect width="2400" height="1440" fill="url(#bg)"/>
+
+  <!-- title -->
+  <text x="70" y="88" fill="#f8fafc" font-size="54" font-weight="800">Freshroots Demand Planner · Components Map</text>
+  <text x="72" y="134" fill="#94a3b8" font-size="25">Twice-weekly reorder planner for Raghav · SAP sales &amp; stock + open Zoho POs → per-SKU recommendations → approved draft POs · freshroots-demand-planner-psi.vercel.app</text>
+
+  <!-- ================= column panels ================= -->
+  <rect class="panel" x="60" y="190" width="460" height="920" rx="22"/>
+  <text class="cap" x="92" y="236">DATA IN</text>
+
+  <rect class="panel" x="600" y="190" width="620" height="920" rx="22"/>
+  <text class="cap" x="632" y="236">VERCEL · NEXT.JS 14</text>
+
+  <rect class="panel" x="1300" y="190" width="420" height="920" rx="22"/>
+  <text class="cap" x="1332" y="236">SUPABASE · POSTGRES</text>
+
+  <!-- ================= column 1: data in ================= -->
+  <rect class="box" x="90" y="262" width="400" height="168" rx="16" stroke="#3b82f6"/>
+  <text class="h" x="116" y="306">SAP exports</text>
+  <text class="t" x="116" y="344">sales.csv · week · sku · distributor</text>
+  <text class="t" x="116" y="376">stock.csv · sku, on hand</text>
+  <text class="s" x="116" y="408">uploaded on /upload · checked row by row</text>
+
+  <rect class="box" x="90" y="456" width="400" height="200" rx="16" stroke="#3b82f6"/>
+  <text class="h" x="116" y="500">Seed CSVs · data/</text>
+  <text class="t" x="116" y="538">15 SKUs + SKU016 (new product)</text>
+  <text class="t" x="116" y="570">16 ISO weeks · 4 distributors</text>
+  <text class="t" x="116" y="602">festival months from calendar.csv</text>
+  <text class="s" x="116" y="634">npm run seed → straight into Supabase</text>
+
+  <rect class="box" x="90" y="682" width="400" height="168" rx="16" stroke="#f59e0b"/>
+  <text class="h" x="116" y="726">Vercel Cron</text>
+  <text class="t" x="116" y="764">Mon &amp; Thu · 07:30 IST</text>
+  <text class="t" x="116" y="796">calls /api/run with CRON_SECRET</text>
+  <text class="s" x="116" y="828">or “Run now” on the dashboard</text>
+
+  <rect class="box" x="90" y="876" width="400" height="200" rx="16" stroke="#475569" stroke-dasharray="10 8"/>
+  <text class="h" x="116" y="920">Rule thresholds</text>
+  <text class="t" x="116" y="958">cover 6–14 wks · perishable 3–4</text>
+  <text class="t" x="116" y="990">high demand +20% → ×1.5 qty</text>
+  <text class="t" x="116" y="1022">festival uplift +25% · Mar, Oct, Nov</text>
+  <text class="s" x="116" y="1054">editable on /settings → config table</text>
+
+  <!-- ================= column 2: vercel ================= -->
+  <rect class="box" x="630" y="262" width="560" height="200" rx="16" stroke="#f59e0b"/>
+  <text class="h" x="656" y="306">Run pipeline · /api/run</text>
+  <text class="t" x="656" y="344">① sync open POs from Zoho</text>
+  <text class="t" x="656" y="376">② rules + exception checks for every SKU</text>
+  <text class="t" x="656" y="408">③ one Claude call for short reasons</text>
+  <text class="t" x="656" y="440">④ save the run + recommendations</text>
+
+  <rect class="box" x="630" y="490" width="560" height="200" rx="16" stroke="#f59e0b"/>
+  <text class="h" x="656" y="534">Rule engine</text>
+  <text class="s" x="866" y="534">lib/rules.ts · lib/exceptions.ts</text>
+  <text class="t" x="656" y="572">cover = (on hand + open POs) ÷ demand</text>
+  <text class="t" x="656" y="604">REORDER NOW · REORDER HIGH · PAUSE · OK</text>
+  <text class="t" x="656" y="636">EXCEPTION: new product / launch, swing, anomaly</text>
+  <text class="s" x="656" y="668">pure functions · 62 vitest tests</text>
+
+  <rect class="box" x="630" y="718" width="560" height="168" rx="16" stroke="#22c55e"/>
+  <text class="h" x="656" y="762">Dashboard (Raghav's view)</text>
+  <text class="t" x="656" y="800">Recommendations · Exceptions · Upload</text>
+  <text class="t" x="656" y="832">Purchase orders · Accuracy · Settings</text>
+  <text class="s" x="656" y="864">no sign-in · approve, edit qty + reason, reject, bulk</text>
+
+  <rect class="box" x="630" y="914" width="560" height="168" rx="16" stroke="#22c55e"/>
+  <text class="h" x="656" y="958">Approvals → Zoho push</text>
+    <text class="t" x="656" y="996">one draft PO per supplier · never sent twice</text>
+  <text class="t" x="656" y="1028">blocks unmapped SKUs · Retry if Zoho fails</text>
+  <text class="s" x="656" y="1060">lib/approvals.ts · lib/zoho.ts · approval kept if Zoho fails</text>
+
+  <!-- ================= column 3: supabase ================= -->
+  <g>
+    <rect class="db" x="1330" y="262" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="299">skus</text><text class="s" x="1354" y="331">16 products + Zoho item &amp; vendor ids</text>
+    <rect class="db" x="1330" y="362" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="399">weekly_sales</text><text class="s" x="1354" y="431">units · week · sku · distributor</text>
+    <rect class="db" x="1330" y="462" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="499">stock</text><text class="s" x="1354" y="531">on hand per SKU</text>
+    <rect class="db" x="1330" y="562" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="599">open_pos</text><text class="s" x="1354" y="631">synced from Zoho every run</text>
+    <rect class="db" x="1330" y="662" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="699">config</text><text class="s" x="1354" y="731">thresholds · festival months</text>
+    <rect class="db" x="1330" y="762" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="799">runs</text><text class="s" x="1354" y="831">every scheduled / manual run</text>
+    <rect class="db" x="1330" y="862" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="899">recommendations</text><text class="s" x="1354" y="931">action · qty · reason · decision</text>
+    <rect class="db" x="1330" y="962" width="360" height="88" rx="14"/>
+    <text class="dbh" x="1354" y="999">po_log</text><text class="s" x="1354" y="1031">every PO sent to Zoho</text>
+  </g>
+
+  <!-- ================= column 4: external + people ================= -->
+  <rect class="box" x="1810" y="246" width="490" height="236" rx="18" stroke="#a78bfa"/>
+  <text class="h" x="1838" y="292">Zoho Inventory · India</text>
+  <text class="t" x="1838" y="330">Mesa School org · 16 items · 5 suppliers</text>
+  <text class="t" x="1838" y="362">reads POs still to arrive</text>
+  <text class="s" x="1838" y="390">(draft · issued · partially received)</text>
+  <text class="t" x="1838" y="424">creates draft POs, ref FR-run-vendor</text>
+  <text class="s" x="1838" y="456">OAuth refresh token · access token cached</text>
+
+  <rect class="box" x="1810" y="514" width="490" height="168" rx="18" stroke="#64748b" stroke-dasharray="10 8"/>
+  <text class="h" x="1838" y="558">Claude · Anthropic API</text>
+  <text class="t" x="1838" y="596">one batched call · ≤ 20-word reasons</text>
+  <text class="t" x="1838" y="628">explains the numbers, never changes them</text>
+  <text class="s" x="1838" y="660">optional · template reasons until a key is added</text>
+
+  <circle cx="2055" cy="1000" r="96" fill="#13254a" stroke="#3b82f6" stroke-width="3"/>
+  <text x="2055" y="1000" text-anchor="middle" fill="#f8fafc" font-size="34" font-weight="800">Raghav</text>
+  <text x="2055" y="1034" text-anchor="middle" fill="#94a3b8" font-size="19">demand planner</text>
+
+  <rect class="box" x="1810" y="714" width="490" height="138" rx="18" stroke="#22c55e" stroke-dasharray="10 8" fill="#0f2418"/>
+  <text class="h" x="1838" y="758">Suppliers</text>
+  <text class="t" x="1838" y="796">get a PO only after it is issued</text>
+  <text class="s" x="1838" y="828">in Zoho · the planner only creates drafts</text>
+
+  <!-- ================= flows ================= -->
+  <!-- 1 blue: SAP upload into dashboard -->
+  <path class="flow" stroke="#3b82f6" d="M490,330 C560,330 560,778 622,778" marker-end="url(#aBlue)"/>
+  <text class="lb" fill="#60a5fa" x="534" y="826">upload</text>
+
+  <!-- 2 amber: cron triggers pipeline -->
+  <path class="flow" stroke="#f59e0b" d="M490,750 C565,750 565,330 622,330" marker-end="url(#aAmber)"/>
+  <text class="lb" fill="#fbbf24" x="498" y="728">Mon/Thu</text>
+
+  <!-- amber: pipeline -> rules -->
+  <path class="flow" stroke="#f59e0b" d="M910,462 L910,484" marker-end="url(#aAmber)"/>
+
+  <!-- amber: pipeline reads open POs from Zoho (top route) -->
+  <path class="flow" stroke="#f59e0b" d="M1190,300 C1250,300 1250,168 1320,168 L1745,168 C1790,168 1790,320 1802,320" marker-end="url(#aAmber)"/>
+  <text class="lb" fill="#fbbf24" x="1440" y="158">① read open POs</text>
+
+  <!-- amber: pipeline asks Claude (branches off the top route) -->
+  <path class="flow" stroke="#f59e0b" stroke-dasharray="12 8" d="M1745,168 C1772,168 1772,598 1802,598" marker-end="url(#aAmber)"/>
+  <text class="lb" fill="#fbbf24" x="1764" y="520" transform="rotate(-90 1764 520)">③ explain</text>
+
+  <!-- amber: pipeline saves to DB -->
+  <path class="flow" stroke="#f59e0b" d="M1190,440 C1262,440 1262,906 1322,906" marker-end="url(#aAmber)"/>
+  <text class="lb" fill="#fbbf24" x="1288" y="720" transform="rotate(-90 1288 720)">④ save</text>
+
+  <!-- green: dashboard reads/writes DB -->
+  <path class="flow" stroke="#22c55e" d="M1198,800 L1322,800" marker-start="url(#aGreen)" marker-end="url(#aGreen)"/>
+  <text class="lb" fill="#4ade80" x="1210" y="778">read · write</text>
+
+  <!-- green: approvals log to po_log -->
+  <path class="flow" stroke="#22c55e" d="M1190,1040 C1250,1040 1260,1006 1322,1006" marker-end="url(#aGreen)"/>
+  <text class="lb" fill="#4ade80" x="1268" y="1082">log</text>
+
+  <!-- green: approvals create draft PO in Zoho (bottom route) -->
+  <path class="flow" stroke="#22c55e" d="M1190,960 C1240,960 1240,1146 1300,1146 L2350,1146 L2350,364 L2308,364" marker-end="url(#aGreen)"/>
+  <text class="lb" fill="#4ade80" x="1560" y="1136">create draft PO in Zoho</text>
+
+  <!-- green: Raghav opens dashboard and approves (lowest route) -->
+  <path class="flow" stroke="#22c55e" d="M2055,1096 L2055,1192 L920,1192 L920,1090" marker-end="url(#aGreen)"/>
+  <text class="lb" fill="#4ade80" x="1180" y="1182">Raghav opens the dashboard · approves or edits</text>
+
+  <!-- ================= legend ================= -->
+  <rect x="60" y="1236" width="2280" height="86" rx="20" fill="#0d1526" stroke="#1f2b40" stroke-width="2"/>
+  <circle cx="102" cy="1279" r="11" fill="#3b82f6"/>
+  <text x="126" y="1287" fill="#e2e8f0" font-size="24">Data in · SAP CSV upload or seed</text>
+  <circle cx="612" cy="1279" r="11" fill="#f59e0b"/>
+  <text x="636" y="1287" fill="#e2e8f0" font-size="24">Mon/Thu run · ① sync POs → ② rules → ③ explain → ④ save</text>
+  <circle cx="1406" cy="1279" r="11" fill="#22c55e"/>
+  <text x="1430" y="1287" fill="#e2e8f0" font-size="24">Raghav approves → draft PO in Zoho → logged</text>
+  <rect x="2010" y="1266" width="40" height="26" rx="6" fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <text x="2062" y="1287" fill="#e2e8f0" font-size="24">optional / outside</text>
+
+  <!-- footer -->
+  <text x="62" y="1382" fill="#64748b" font-size="21">Hosting: Vercel (cron jobs, no sign-in) · Database: Supabase Postgres · ERP: Zoho Inventory (India DC) · AI: Claude, optional · Code: github.com/snehaiyer-beep/freshroots-demand-planner</text>
+</svg>

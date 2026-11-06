@@ -5,6 +5,8 @@ Raghav approves, edits or rejects each one on a dashboard. **Only after approval
 
 Stack: Next.js 14 (App Router, strict TypeScript) · Supabase (Postgres + email/password Auth, RLS) · Tailwind · recharts · Vercel Cron · Claude for short explanations.
 
+![Freshroots Demand Planner · Components Map](docs/components-map.png)
+
 ## How it works
 
 ```
