@@ -138,13 +138,21 @@ export async function getOpenPOs(): Promise<OpenPoLine[] | null> {
   return lines;
 }
 
-/** Replace open_pos with what Zoho reports. Returns a short status message. */
+/** Open-PO rows that came from Zoho have ids like "<purchaseorder_id>:<line_item_id>". */
+export function isZohoOpenPoId(id: string): boolean {
+  return /^\d+:\d+$/.test(id);
+}
+
+/**
+ * Replace the Zoho-sourced open_pos rows with what Zoho reports now. Rows loaded another way
+ * (seed / mock data, ids without "po:line") are left alone. Returns a short status message.
+ */
 export async function syncOpenPOs(): Promise<string> {
   try {
     const lines = await getOpenPOs();
     if (lines === null) return "Zoho mock mode: kept existing open POs";
     const db = supabaseAdmin();
-    const del = await db.from("open_pos").delete().neq("id", "");
+    const del = await db.from("open_pos").delete().like("id", "%:%");
     if (del.error) throw new Error(del.error.message);
     if (lines.length > 0) {
       const ins = await db.from("open_pos").insert(lines);

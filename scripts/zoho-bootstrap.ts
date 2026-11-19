@@ -1,11 +1,14 @@
 /**
- * One-time: create placeholder vendors (one per category) and the 16 items in an empty Zoho Inventory org.
- *   npm run zoho:bootstrap
- * Reads data/sku_master.csv for names, SKU codes and categories. Safe to re-run: existing vendors/items
+ * Create placeholder vendors (one per category) and the planner's items in Zoho Inventory.
+ *   npm run zoho:bootstrap                 → items from data/sku_master.csv (its Category column)
+ *   npm run zoho:bootstrap -- --from-db    → every SKU in Supabase not yet mapped to Zoho
+ *                                            (category: "Fresh Foods" if perishable, else "Snack")
+ * Safe to re-run: existing vendors/items
  * (matched by name / SKU) are reused, never duplicated. Run `npm run zoho:connect` afterwards to map them.
  */
 import { config as loadEnv } from "dotenv";
 import { readFileSync } from "node:fs";
+import { createClient } from "@supabase/supabase-js";
 import { parseCsv } from "../lib/csv";
 
 loadEnv({ path: ".env.local" });
@@ -40,9 +43,20 @@ async function main() {
   if (!process.env.ZOHO_ORG_ID) throw new Error("ZOHO_ORG_ID missing — run `npm run zoho:connect -- --dry` first");
   const token = await accessToken();
 
-  const [header, ...rows] = parseCsv(readFileSync("data/sku_master.csv", "utf8"));
-  const col = (name: string) => header.indexOf(name);
-  const skus = rows.map((r) => ({ sku: r[col("SKU_ID")], name: r[col("SKU_Name")], category: r[col("Category")] }));
+  let skus: { sku: string; name: string; category: string }[];
+  if (process.argv.includes("--from-db")) {
+    const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "", {
+      auth: { persistSession: false },
+    });
+    const { data, error } = await db.from("skus").select("sku, name, perishable").is("zoho_item_id", null).order("sku");
+    if (error) throw new Error(`load skus: ${error.message}`);
+    skus = (data ?? []).map((s) => ({ sku: s.sku, name: s.name, category: s.perishable ? "Fresh Foods" : "Snack" }));
+    console.log(`${skus.length} unmapped SKUs in Supabase`);
+  } else {
+    const [header, ...rows] = parseCsv(readFileSync("data/sku_master.csv", "utf8"));
+    const col = (name: string) => header.indexOf(name);
+    skus = rows.map((r) => ({ sku: r[col("SKU_ID")], name: r[col("SKU_Name")], category: r[col("Category")] }));
+  }
 
   // vendors: one placeholder per category
   const existingVendors = await call<{ contacts: { contact_id: string; contact_name: string }[] }>(token, "GET", "/contacts", undefined, {

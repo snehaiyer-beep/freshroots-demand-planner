@@ -11,6 +11,7 @@
     "setup:supabase": "tsx scripts/setup-supabase.ts",
     "zoho:connect": "tsx scripts/zoho-connect.ts",
     "zoho:bootstrap": "tsx scripts/zoho-bootstrap.ts",
+    "seed:mock": "tsx scripts/load-mock.ts",
     "seed": "tsx scripts/seed.ts"
   },
   "devDependencies": {

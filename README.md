@@ -107,12 +107,17 @@ Without `SUPABASE_DB_URL` you can paste the file into the SQL editor instead. Ma
 ```bash
 npm run seed                 # data/*.csv: 15 SKUs from the SAP/master exports + SKU016 (new product, no sales)
 npm run seed -- --synthetic  # 40 SKUs (8 perishable, 2 launched <12 wks ago), 50 distributors, 156 weeks
+npm run seed:mock -- --replace  # demo set: data/freshroots_mock_data.sql, 18 SKUs FR-101…FR-118 (current live data)
 ```
 
 The seed **wipes** SKUs, sales, stock, open POs, runs and recommendations first.
 
 - **CSV mode** reads `data/sku_master.csv`, `weekly_sales.csv` (ISO weeks converted to Mondays), `current_inventory.csv` and `calendar.csv` (which sets `festival_months`). Each SKU's sales are assigned to its distributor from the SKU master. Perishability "High" means perishable. Zoho IDs are fake (`ZITEM-<sku>`, `ZVEND-<category>`). **SKU016 Freshroots Millet Muesli 400g** has no sales and 0 stock, so every run sends it to /exceptions as a *New product* for Raghav.
 - **Synthetic mode** is deterministic. Oct/Nov/Mar peaks; one whole-SKU spike (anomaly); one distributor spike (distributor_swing); step-up SKUs (REORDER_HIGH, one also REORDER_NOW ×mult); and mixed stock levels. Every action type appears whatever month you seed in (covered by `tests/seed.test.ts`).
+
+### Demo (mock) data
+
+`data/freshroots_mock_data.sql` holds 18 products (FR-101…FR-118), 16 weeks of sales across 4 distributors, stock as of 18 Nov and 4 open POs. A November run gives **4 Reorder now · 3 High demand · 3 Pause · 5 On track · 3 Needs review** (FR-116 new launch, FR-117 distributor drop, FR-118 spike). This result is covered by `tests/mock-data.test.ts`. `npm run seed:mock -- --replace` loads it and removes other SKUs. Afterwards, `npm run zoho:bootstrap -- --from-db` creates any unmapped SKUs as Zoho items, and `npm run zoho:connect` maps them. Open POs loaded this way have `MOCK-OPEN-…` ids, and the Zoho sync leaves them alone: it only refreshes rows that came from Zoho.
 
 Add your email (if you did not use `SEED_ALLOWED_EMAILS`):
 
